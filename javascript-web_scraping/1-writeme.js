@@ -14,5 +14,6 @@ fs.writeFile(filePath, content, 'utf-8', (err) => {
     return;
   }
 
-  console.log(`Content has been written to ${filePath}`);
+  // Si no hay errores, imprime la confirmación
+  console.log(content);
 });
