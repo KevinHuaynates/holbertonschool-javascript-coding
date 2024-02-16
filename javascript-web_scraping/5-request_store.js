@@ -18,7 +18,6 @@ request.get(url, (error, response, body) => {
   fs.writeFile(filePath, body, 'utf-8', (err) => {
     if (err) {
       console.error(err);
-      return;
     }
     // Si la escritura se realizó correctamente, no se muestra ningún mensaje en la consola
   });
