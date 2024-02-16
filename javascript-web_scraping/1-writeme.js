@@ -20,12 +20,6 @@ fs.writeFile(filePath, content, 'utf-8', (err) => {
     return;
   }
 
-  // Lee el contenido del archivo recién escrito y lo imprime
-  fs.readFile(filePath, 'utf-8', (readErr, data) => {
-    if (readErr) {
-      console.error(readErr);
-      return;
-    }
-    console.log(data.trim()); // Elimina espacios en blanco alrededor del contenido
-  });
+  // Imprime el contenido del archivo escrito
+  console.log(content);
 });
