@@ -20,6 +20,6 @@ request.get(url, (error, response, body) => {
       console.error(err);
       return;
     }
-    console.log(`File ${filePath} saved!`);
+    // Si la escritura se realizó correctamente, no se muestra ningún mensaje en la consola
   });
 });
