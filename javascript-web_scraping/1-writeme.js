@@ -20,5 +20,12 @@ fs.writeFile(filePath, content, 'utf-8', (err) => {
     return;
   }
 
-  console.log(content);
+  // Lee el contenido del archivo recién escrito y lo imprime
+  fs.readFile(filePath, 'utf-8', (readErr, data) => {
+    if (readErr) {
+      console.error(readErr);
+      return;
+    }
+    console.log(data);
+  });
 });
