@@ -26,6 +26,6 @@ fs.writeFile(filePath, content, 'utf-8', (err) => {
       console.error(readErr);
       return;
     }
-    console.log(data);
+    console.log(data.trim()); // Elimina espacios en blanco alrededor del contenido
   });
 });
