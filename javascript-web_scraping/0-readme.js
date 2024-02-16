@@ -1,3 +1,4 @@
+#!/usr/bin/node
 // Importa el módulo fs
 const fs = require('fs');
 
