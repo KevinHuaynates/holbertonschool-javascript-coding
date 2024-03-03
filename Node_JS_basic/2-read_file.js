@@ -9,6 +9,10 @@ function countStudents(path) {
 
     const students = lines.map(line => line.split(',')).filter(student => student.length === 4);
 
+    if (students.length === 0) {
+      throw new Error('Database is empty');
+    }
+
     const fields = {};
     students.forEach(student => {
       const field = student[3];
@@ -29,7 +33,11 @@ function countStudents(path) {
       console.log(`Number of students in ${field}: ${fields[field].count}. List: ${fields[field].students.join(', ')}`);
     }
   } catch (error) {
-    throw new Error('Cannot load the database');
+    if (error.code === 'ENOENT') {
+      throw new Error('Cannot load the database');
+    } else {
+      throw error;
+    }
   }
 }
 
