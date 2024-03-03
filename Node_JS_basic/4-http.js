@@ -1,18 +1,17 @@
+// Importing the required module
 const http = require('http');
 
+// Creating a HTTP server
 const app = http.createServer((req, res) => {
-  if (req.url === '/') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    // Setting the response headers
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+
+    // Sending the response
     res.end('Hello Holberton School!\n');
-  } else if (req.url === '/test') {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Test\n');
-  } else {
-    res.writeHead(404, { 'Content-Type': 'text/plain' });
-    res.end('Not Found\n');
-  }
 });
 
+// Listening on port 1245
 app.listen(1245);
 
+// Exporting the app
 module.exports = app;
