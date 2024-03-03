@@ -1,43 +1,31 @@
-// 2-read_file.js
-
 const fs = require('fs');
 
 function countStudents(path) {
   try {
     const data = fs.readFileSync(path, 'utf8');
-    const lines = data.split('\n').filter(line => line.trim() !== '');
+    const lines = data.trim().split('\n');
 
-    const students = lines.map(line => line.split(',')).filter(student => student.length === 4);
-
-    if (students.length === 0) {
-      throw new Error('Database is empty');
-    }
-
+    const students = lines.map(line => line.split(','));
     const fields = {};
     students.forEach(student => {
-      const field = student[3];
-      const name = student[0];
-      if (fields[field]) {
-        fields[field].count++;
-        fields[field].students.push(name);
-      } else {
-        fields[field] = {
-          count: 1,
-          students: [name]
-        };
+      if (student.length === 4 && student[0] !== 'firstname') {
+        const field = student[3];
+        if (!fields[field]) {
+          fields[field] = [];
+        }
+        fields[field].push(student[0]);
       }
     });
 
-    console.log(`Number of students: ${students.length}`);
+    const totalStudents = students.length - 1;
+    console.log(`Number of students: ${totalStudents}`);
     for (const field in fields) {
-      console.log(`Number of students in ${field}: ${fields[field].count}. List: ${fields[field].students.join(', ')}`);
+      if (Object.prototype.hasOwnProperty.call(fields, field)) {
+        console.log(`Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`);
+      }
     }
-  } catch (error) {
-    if (error.code === 'ENOENT') {
-      throw new Error('Cannot load the database');
-    } else {
-      throw error;
-    }
+  } catch (err) {
+    throw new Error('Cannot load the database');
   }
 }
 
