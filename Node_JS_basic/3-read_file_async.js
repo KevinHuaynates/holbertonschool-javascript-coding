@@ -9,7 +9,7 @@ function countStudents(path) {
         const lines = data.trim().split('\n');
         const students = lines.map((line) => line.split(','));
         const fields = {};
-        students.forEach(student => {
+        students.forEach((student) => {
           if (student.length === 4 && student[0] !== 'firstname') {
             const field = student[3];
             if (!fields[field]) {
