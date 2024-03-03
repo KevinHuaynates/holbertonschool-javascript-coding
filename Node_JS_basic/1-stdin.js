@@ -2,11 +2,11 @@
 
 process.stdin.setEncoding('utf8');
 
-console.log('Welcome to Holberton School, what is your name?');
+process.stdout.write('Welcome to Holberton School, what is your name?\n');
 
 process.stdin.on('data', (data) => {
   const name = data.trim(); // Elimina espacios en blanco alrededor del nombre
-  console.log(`Your name is: ${name}\r\n`); // Añade \r\n al final del mensaje
-  console.log('This important software is now closing');
+  process.stdout.write(`Your name is: ${name}\n`);
+  process.stdout.write('This important software is now closing\n');
   process.exit(); // Termina el programa
 });
