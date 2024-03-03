@@ -2,10 +2,10 @@
 
 process.stdin.resume();
 
-process.stdout.write('Welcome to Holberton School, what is your name?\n');
+process.stdout.write('Welcome to Holberton School, what is your name?\r');
 
 process.stdin.on('data', (input) => {
-  process.stdout.write(`Your name is: ${input.toString().trim()}\n`);
+  process.stdout.write(`Your name is: ${input.toString().trim()}\r`);
   process.exit(0);
 });
 
