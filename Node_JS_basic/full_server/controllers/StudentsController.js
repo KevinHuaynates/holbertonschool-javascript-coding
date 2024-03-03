@@ -1,36 +1,40 @@
-// full_server/controllers/StudentsController.js
+const { readDatabase } = require('../utils');
 
-import { readDatabase } from '../utils';
-
-export default class StudentsController {
-  static async getAllStudents(req, res) {
-    try {
-      const students = await readDatabase('database.csv');
-      let response = 'This is the list of our students\n';
-      Object.entries(students).forEach(([field, names]) => {
-        response += `Number of students in ${field}: ${names.length}. List: ${names.join(', ')}\n`;
+class StudentsController {
+  static getAllStudents(req, res) {
+    readDatabase(process.argv[2])
+      .then((fields) => {
+        const message = 'This is the list of our students\n';
+        let output = message;
+        const sortedFields = Object.keys(fields).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+        sortedFields.forEach((field) => {
+          output += `Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}\n`;
+        });
+        res.status(200).send(output);
+      })
+      .catch((err) => {
+        res.status(500).send(err.message);
       });
-      res.status(200).send(response);
-    } catch (error) {
-      res.status(500).send(error.message);
-    }
   }
 
-  static async getAllStudentsByMajor(req, res) {
-    const major = req.params.major.toUpperCase();
-    if (major !== 'CS' && major !== 'SWE') {
-      return res.status(500).send('Major parameter must be CS or SWE');
-    }
-
-    try {
-      const students = await readDatabase('database.csv');
-      if (!students[major]) {
-        return res.status(200).send('No students found for this major');
-      }
-      const response = `List: ${students[major].join(', ')}`;
-      res.status(200).send(response);
-    } catch (error) {
-      res.status(500).send(error.message);
+  static getAllStudentsByMajor(req, res) {
+    const { major } = req.params;
+    if (['CS', 'SWE'].includes(major)) {
+      readDatabase(process.argv[2])
+        .then((fields) => {
+          if (fields[major]) {
+            res.status(200).send(`List: ${fields[major].join(', ')}`);
+          } else {
+            res.status(404).send('Major not found');
+          }
+        })
+        .catch((err) => {
+          res.status(500).send(err.message);
+        });
+    } else {
+      res.status(500).send('Major parameter must be CS or SWE');
     }
   }
 }
+
+module.exports = StudentsController;

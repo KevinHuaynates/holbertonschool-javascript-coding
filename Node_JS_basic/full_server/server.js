@@ -1,15 +1,12 @@
-// full_server/server.js
-
-import express from 'express';
-import routes from './routes';
-
+const express = require('express');
 const app = express();
-const PORT = 1245;
+const port = 1245;
+const routes = require('./routes/index');
 
-app.use('/', routes);
+app.use(routes);
 
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
 });
 
-export default app;
+module.exports = app;
