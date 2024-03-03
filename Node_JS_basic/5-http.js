@@ -1,12 +1,14 @@
+#!/usr/bin/node
 const http = require('http');
 const fs = require('fs');
 
 const app = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/plain');
-
   if (req.url === '/') {
+    res.statusCode = 200;
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
+    res.statusCode = 200;
     fs.readFile(process.argv[2], 'utf8', (err, data) => {
       if (err) {
         res.statusCode = 500;
@@ -24,19 +26,15 @@ const app = http.createServer((req, res) => {
             fields[field].push(student[0]);
           }
         });
-
         const totalStudents = students.length - 1;
-
-        // Combine content into a single string
-        const response = `This is the list of our students\n` +
-                         `Number of students: ${totalStudents}\n`;
+        res.write(`This is the list of our students\n`);
+        res.write(`Number of students: ${totalStudents}\n`);
         for (const field in fields) {
           if (Object.prototype.hasOwnProperty.call(fields, field)) {
-            response += `Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}\n`;
+            res.write(`Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}\n`);
           }
         }
-
-        res.end(response);
+        res.end();
       }
     });
   } else {
