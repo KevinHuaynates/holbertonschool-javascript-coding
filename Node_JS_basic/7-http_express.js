@@ -1,60 +1,47 @@
+#!/usr/bin/node
 const express = require('express');
-const fs = require('fs').promises;
+const fs = require('fs');
 
 const app = express();
+app.listen(1245);
 
-// Define port
-const PORT = 1245;
-
-// Route for /
 app.get('/', (req, res) => {
-  res.send('Hello Holberton School!');
+  res.setHeader('Content-Type', 'text/plain');
+  res.statusCode = 200;
+  res.end('Hello Holberton School!');
 });
 
-// Route for /students
-app.get('/students', async (req, res) => {
-  try {
-    const data = await countStudents('database.csv');
-    res.status(200).send('This is the list of our students\n' + data);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
-
-// Function to count students
-async function countStudents(path) {
-  try {
-    const data = await fs.readFile(path, 'utf8');
-    const lines = data.trim().split('\n');
-    const students = lines.map((line) => line.split(','));
-    const fields = {};
-    students.forEach((student) => {
-      if (student.length === 4 && student[0] !== 'firstname') {
-        const field = student[3];
-        if (!fields[field]) {
-          fields[field] = [];
+app.get('/students', (req, res) => {
+  res.setHeader('Content-Type', 'text/plain');
+  res.statusCode = 200;
+  const fileName = process.argv[2];
+  const message = 'This is the list of our students\n';
+  fs.readFile(fileName, 'utf8', (err, data) => {
+    if (err) {
+      res.end('Cannot load the database');
+    } else {
+      const lines = data.trim().split('\n');
+      const students = lines.map((line) => line.split(','));
+      const fields = {};
+      students.forEach((student) => {
+        if (student.length === 4 && student[0] !== 'firstname') {
+          const field = student[3];
+          if (!fields[field]) {
+            fields[field] = [];
+          }
+          fields[field].push(student[0]);
         }
-        fields[field].push(student[0]);
+      });
+      const totalStudents = students.length - 1;
+      res.write(`${message}Number of students: ${totalStudents}\n`);
+      for (const field in fields) {
+        if (Object.prototype.hasOwnProperty.call(fields, field)) {
+          res.write(`Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}\n`);
+        }
       }
-    });
-
-    let result = '';
-    const totalStudents = students.length - 1;
-    result += `Number of students: ${totalStudents}\n`;
-    for (const field in fields) {
-      if (Object.prototype.hasOwnProperty.call(fields, field)) {
-        result += `Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}\n`;
-      }
+      res.end();
     }
-    return result;
-  } catch (error) {
-    throw new Error('Cannot load the database');
-  }
-}
-
-// Start server
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  });
 });
 
-module.exports = server;
+module.exports = app;
